@@ -3,365 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Breeder Management Pro</title>
+    <title>Management Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        .hidden { display: none; }
-        .active-nav { background-color: #0891b2; color: white; }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-slate-50 text-slate-800">
+<body class="bg-gray-50 text-gray-900">
 
     <div class="flex h-screen">
-        <aside class="w-64 bg-slate-900 text-white flex flex-col p-6 shadow-xl">
-            <div class="flex items-center gap-2 text-cyan-400 font-bold text-xl mb-10">
-                <i data-lucide="dog"></i> <span>Breeder Pro</span>
+        <!-- SIDEBAR -->
+        <aside class="w-64 bg-slate-800 text-white flex flex-col">
+            <div class="p-6 text-2xl font-bold border-b border-slate-700">
+                <i class="fa-solid fa-dna mr-2"></i>Tracker
             </div>
-            
-            <nav class="space-y-2 flex-1">
-                <button onclick="showSection('dashboard')" id="nav-dashboard" class="nav-btn flex items-center gap-3 w-full p-3 rounded-lg hover:bg-slate-800 transition active-nav">
-                    <i data-lucide="layout-dashboard"></i> Dashboard
-                </button>
-                <button onclick="showSection('dogs')" id="nav-dogs" class="nav-btn flex items-center gap-3 w-full p-3 rounded-lg hover:bg-slate-800 transition">
-                    <i data-lucide="database"></i> My Dogs
-                </button>
-                <button onclick="showSection('litters')" id="nav-litters" class="nav-btn flex items-center gap-3 w-full p-3 rounded-lg hover:bg-slate-800 transition">
-                    <i data-lucide="baby"></i> Litters
-                </button>
-                <button onclick="showSection('waitlist')" id="nav-waitlist" class="nav-btn flex items-center gap-3 w-full p-3 rounded-lg hover:bg-slate-800 transition">
-                    <i data-lucide="users"></i> Waitlist
-                </button>
+            <nav class="flex-grow p-4 space-y-2">
+                <a href="#" class="block p-3 rounded bg-blue-600">Dashboard</a>
+                <a href="#" class="block p-3 rounded hover:bg-slate-700 transition">Active Litters</a>
+                <a href="#" class="block p-3 rounded hover:bg-slate-700 transition">Sire/Dam Records</a>
+                <a href="#" class="block p-3 rounded hover:bg-slate-700 transition">Health Logs</a>
+                <a href="#" class="block p-3 rounded hover:bg-slate-700 transition">Settings</a>
             </nav>
-
-            <div class="text-xs text-slate-500 border-t border-slate-700 pt-4">
-                Tasmania HQ | 2026
-            </div>
         </aside>
 
-        <main class="flex-1 overflow-y-auto p-8">
-            
-            <section id="dashboard" class="content-section">
-                <h2 class="text-3xl font-bold mb-6">Overview</h2>
+        <!-- MAIN CONTENT -->
+        <main class="flex-1 overflow-y-auto">
+            <!-- HEADER -->
+            <header class="bg-white shadow-sm p-4 flex justify-between items-center">
+                <h1 class="text-xl font-semibold">Active Overview</h1>
+                <button class="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700">
+                    + Add New Entry
+                </button>
+            </header>
+
+            <div class="p-8">
+                <!-- STATS CARDS -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                        <p class="text-slate-500 text-sm font-medium">Total Dogs</p>
-                        <p id="stat-dogs" class="text-3xl font-bold mt-1">0</p>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                        <p class="text-gray-500 text-sm uppercase">Active Breeders</p>
+                        <p class="text-3xl font-bold">12</p>
                     </div>
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-cyan-100">
-                        <p class="text-slate-500 text-sm font-medium">Active Litters</p>
-                        <p class="text-3xl font-bold text-cyan-600 mt-1">0</p>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                        <p class="text-gray-500 text-sm uppercase">Current Litters</p>
+                        <p class="text-3xl font-bold">4</p>
                     </div>
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                        <p class="text-slate-500 text-sm font-medium">Waitlist Contacts</p>
-                        <p id="stat-waitlist" class="text-3xl font-bold mt-1">0</p>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                        <p class="text-gray-500 text-sm uppercase">Upcoming Cycles</p>
+                        <p class="text-3xl font-bold">7</p>
                     </div>
                 </div>
-                
-                <div class="bg-white p-6 rounded-xl shadow-sm border">
-                    <h3 class="font-bold mb-4 flex items-center gap-2"><i data-lucide="bell" class="text-amber-500"></i> Notifications</h3>
-                    <p class="text-slate-500 italic text-sm">No urgent tasks for today.</p>
-                </div>
-            </section>
 
-            <section id="dogs" class="content-section hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-3xl font-bold">Dog Database</h2>
-                    <button onclick="toggleModal('dog-modal')" class="bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700 transition flex items-center gap-2">
-                        <i data-lucide="plus" size="18"></i> Add Dog
-                    </button>
-                </div>
-                <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+                <!-- DATA TABLE -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-100">
+                    <div class="p-4 border-b border-gray-100">
+                        <h2 class="font-bold">Recent Activity</h2>
+                    </div>
                     <table class="w-full text-left">
-                        <thead class="bg-slate-50 border-b text-slate-500 uppercase text-xs">
+                        <thead class="bg-gray-50 text-xs uppercase text-gray-500">
                             <tr>
-                                <th class="p-4">Name</th>
-                                <th class="p-4">Breed</th>
+                                <th class="p-4">ID</th>
+                                <th class="p-4">Subject</th>
                                 <th class="p-4">Status</th>
-                                <th class="p-4">Action</th>
+                                <th class="p-4">Due Date</th>
+                                <th class="p-4 text-right">Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="dog-table-body" class="divide-y">
-                            </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <section id="waitlist" class="content-section hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-3xl font-bold">Waitlist</h2>
-                    <button onclick="toggleModal('waitlist-modal')" class="bg-slate-800 text-white px-4 py-2 rounded-lg hover:bg-black transition flex items-center gap-2">
-                        <i data-lucide="user-plus" size="18"></i> New Contact
-                    </button>
-                </div>
-                <div id="waitlist-container" class="grid grid-cols-1 gap-4">
-                    </div>
-            </section>
-
-            <section id="litters" class="content-section hidden">
-                <h2 class="text-3xl font-bold mb-6">Litter Management</h2>
-                <div class="bg-slate-100 p-10 rounded-xl border-2 border-dashed border-slate-300 text-center">
-                    <i data-lucide="flask-conical" class="mx-auto mb-4 text-slate-400" size="48"></i>
-                    <p class="text-slate-500">Litter tracking module coming soon.</p>
-                </div>
-            </section>
-
-        </main>
-    </div>
-
-    <div id="dog-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl p-6 w-full max-w-md shadow-2xl">
-            <h3 class="text-xl font-bold mb-4">Add New Dog</h3>
-            <div class="space-y-4">
-                <input type="text" id="dog-name" placeholder="Dog Name" class="w-full p-2 border rounded">
-                <select id="dog-breed" class="w-full p-2 border rounded">
-                    <option value="Rottweiler">Rottweiler</option>
-                    <option value="Staffordshire Bull Terrier">Staffy</option>
-                    <option value="Blue Heeler">Blue Heeler</option>
-                </select>
-                <select id="dog-status" class="w-full p-2 border rounded">
-                    <option value="Active">Active</option>
-                    <option value="Retired">Retired</option>
-                    <option value="Future Prospect">Future Prospect</option>
-                </select>
-                <div class="flex gap-2 pt-2">
-                    <button onclick="saveDog()" class="flex-1 bg-cyan-600 text-white py-2 rounded font-bold">Save</button>
-                    <button onclick="toggleModal('dog-modal')" class="flex-1 bg-slate-200 py-2 rounded">Cancel</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="waitlist-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl p-6 w-full max-w-md shadow-2xl">
-            <h3 class="text-xl font-bold mb-4">Add Contact</h3>
-            <div class="space-y-4">
-                <input type="text" id="contact-name" placeholder="Buyer Name" class="w-full p-2 border rounded">
-                <input type="text" id="contact-pref" placeholder="Breed Preference" class="w-full p-2 border rounded">
-                <div class="flex gap-2 pt-2">
-                    <button onclick="saveContact()" class="flex-1 bg-slate-800 text-white py-2 rounded font-bold">Add to List</button>
-                    <button onclick="toggleModal('waitlist-modal')" class="flex-1 bg-slate-200 py-2 rounded">Cancel</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Data Management
-        let dogs = JSON.parse(localStorage.getItem('breeder_dogs')) || [];
-        let waitlist = JSON.parse(localStorage.getItem('breeder_waitlist')) || [];
-
-        function init() {
-            lucide.createIcons();
-            renderDogs();
-            renderWaitlist();
-            updateStats();
-        }
-
-        function toggleModal(id) {
-            document.getElementById(id).classList.toggle('hidden');
-        }
-
-        function showSection(id) {
-            document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-nav'));
-            document.getElementById(id).classList.remove('hidden');
-            document.getElementById('nav-' + id).classList.add('active-nav');
-        }
-
-        // Dog Functions
-        function saveDog() {
-            const name = document.getElementById('dog-name').value;
-            const breed = document.getElementById('dog-breed').value;
-            const status = document.getElementById('dog-status').value;
-            
-            if(!name) return alert("Enter a name");
-            
-            dogs.push({ id: Date.now(), name, breed, status });
-            localStorage.setItem('breeder_dogs', JSON.stringify(dogs));
-            
-            document.getElementById('dog-name').value = '';
-            toggleModal('dog-modal');
-            renderDogs();
-            updateStats();
-        }
-
-        function deleteDog(id) {
-            dogs = dogs.filter(d => d.id !== id);
-            localStorage.setItem('breeder_dogs', JSON.stringify(dogs));
-            renderDogs();
-            updateStats();
-        }
-
-        function renderDogs() {
-            const body = document.getElementById('dog-table-body');
-            body.innerHTML = dogs.map(dog => `
-                <tr class="hover:bg-slate-50">
-                    <td class="p-4 font-bold">${dog.name}</td>
-                    <td class="p-4 text-slate-600">${dog.breed}</td>
-                    <td class="p-4"><span class="px-2 py-1 rounded text-xs font-bold ${dog.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'}">${dog.status}</span></td>
-                    <td class="p-4"><button onclick="deleteDog(${dog.id})" class="text-red-400 hover:text-red-600"><i data-lucide="trash-2" size="16"></i></button></td>
-                </tr>
-            `).join('');
-            lucide.createIcons();
-        }
-
-        // Waitlist Functions
-        function saveContact() {
-            const name = document.getElementById('contact-name').value;
-            const pref = document.getElementById('contact-pref').value;
-            
-            if(!name) return;
-            
-            waitlist.push({ id: Date.now(), name, pref });
-            localStorage.setItem('breeder_waitlist', JSON.stringify(waitlist));
-            
-            document.getElementById('contact-name').value = '';
-            document.getElementById('contact-pref').value = '';
-            toggleModal('waitlist-modal');
-            renderWaitlist();
-            updateStats();
-        }
-
-        function renderWaitlist() {
-            const container = document.getElementById('waitlist-container');
-            container.innerHTML = waitlist.map(c => `
-                <div class="bg-white p-4 rounded-lg border shadow-sm flex justify-between items-center">
-                    <div>
-                        <p class="font-bold text-lg">${c.name}</p>
-                        <p class="text-sm text-cyan-600 font-medium">Interest: ${c.pref}</p>
-                    </div>
-                    <button onclick="deleteContact(${c.id})" class="text-slate-300 hover:text-red-500"><i data-lucide="x-circle"></i></button>
-                </div>
-            `).join('');
-            lucide.createIcons();
-        }
-
-        function deleteContact(id) {
-            waitlist = waitlist.filter(c => c.id !== id);
-            localStorage.setItem('breeder_waitlist', JSON.stringify(waitlist));
-            renderWaitlist();
-            updateStats();
-        }
-
-        function updateStats() {
-            document.getElementById('stat-dogs').innerText = dogs.length;
-            document.getElementById('stat-waitlist').innerText = waitlist.length;
-        }
-
-        init();
-    </script>
-</body>
-</html>                    </div>
-                </div>
-                <div class="bg-white p-6 rounded-xl shadow-sm border">
-                    <h3 class="font-bold mb-4 flex items-center gap-2"><i data-lucide="calendar" class="text-cyan-600"></i> Upcoming Tasks</h3>
-                    <ul class="divide-y">
-                        <li class="py-3 flex justify-between">
-                            <span>Deworming - Litter A</span>
-                            <span class="text-amber-600 font-medium">Tomorrow</span>
-                        </li>
-                        <li class="py-3 flex justify-between">
-                            <span>Vet Check - "Luna"</span>
-                            <span class="text-slate-500 font-medium">Friday</span>
-                        </li>
-                    </ul>
-                </div>
-            </section>
-
-            <section id="dogs" class="content-section hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-3xl font-bold">Dog Database</h2>
-                    <button class="bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700">+ Add Dog</button>
-                </div>
-                <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
-                    <table class="w-full text-left">
-                        <thead class="bg-slate-50 border-b text-slate-500 uppercase text-xs">
-                            <tr>
-                                <th class="p-4">Name</th>
-                                <th class="p-4">Breed</th>
-                                <th class="p-4">Status</th>
-                                <th class="p-4">Health Cleared</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y">
-                            <tr>
-                                <td class="p-4 font-bold">Luna</td>
-                                <td class="p-4">Rottweiler</td>
+                        <tbody class="divide-y divide-gray-100">
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="p-4 text-sm font-medium">#1092</td>
+                                <td class="p-4 text-sm">German Shepherd - Litter A</td>
                                 <td class="p-4"><span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs">Active</span></td>
-                                <td class="p-4">Yes</td>
+                                <td class="p-4 text-sm text-gray-600">June 12, 2024</td>
+                                <td class="p-4 text-right"><button class="text-blue-600 hover:underline">View</button></td>
                             </tr>
-                            <tr>
-                                <td class="p-4 font-bold">Shadow</td>
-                                <td class="p-4">Staffy</td>
-                                <td class="p-4"><span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">Retired</span></td>
-                                <td class="p-4">Yes</td>
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="p-4 text-sm font-medium">#1085</td>
+                                <td class="p-4 text-sm">Golden Retriever - Litter B</td>
+                                <td class="p-4"><span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs">Pending</span></td>
+                                <td class="p-4 text-sm text-gray-600">July 04, 2024</td>
+                                <td class="p-4 text-right"><button class="text-blue-600 hover:underline">View</button></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-            </section>
-
-            <section id="litters" class="content-section hidden">
-                <h2 class="text-3xl font-bold mb-6">Litter Management</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white p-6 rounded-xl border border-l-4 border-l-cyan-500">
-                        <h3 class="font-bold text-lg text-cyan-600">Litter #2026-A</h3>
-                        <p class="text-sm text-slate-500">Sire: Rex x Dam: Luna</p>
-                        <div class="mt-4 flex justify-between text-sm">
-                            <span>Puppies: 6</span>
-                            <span>Born: April 10, 2026</span>
-                        </div>
-                        <button class="mt-4 w-full border border-slate-200 py-2 rounded-lg hover:bg-slate-50">View Growth Chart</button>
-                    </div>
-                </div>
-            </section>
-
-            <section id="waitlist" class="content-section hidden">
-                <h2 class="text-3xl font-bold mb-6">Waitlist & Contacts</h2>
-                <div class="bg-white p-6 rounded-xl shadow-sm border">
-                    <div class="space-y-4">
-                        <div class="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
-                            <div>
-                                <p class="font-bold">John Smith</p>
-                                <p class="text-xs text-slate-500 italic text-cyan-700">Prefers: Male, Blue Heeler</p>
-                            </div>
-                            <span class="text-sm bg-slate-200 px-2 py-1 rounded">Deposit Paid</span>
-                        </div>
-                        <div class="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
-                            <div>
-                                <p class="font-bold">Sarah Jenkins</p>
-                                <p class="text-xs text-slate-500 italic text-cyan-700">Prefers: Any, Rottweiler</p>
-                            </div>
-                            <span class="text-sm text-slate-400">Inquiry Only</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
+            </div>
         </main>
     </div>
 
-    <script>
-        // Initialize Icons
-        lucide.createIcons();
-
-        // Section Switching Logic
-        function showSection(id) {
-            // Hide all sections
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.add('hidden');
-            });
-            // Remove active style from all nav buttons
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active-nav');
-            });
-            
-            // Show selected section
-            document.getElementById(id).classList.remove('hidden');
-            // Add active style to clicked button
-            document.getElementById('nav-' + id).classList.add('active-nav');
-        }
-    </script>
 </body>
 </html>
