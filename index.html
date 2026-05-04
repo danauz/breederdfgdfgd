@@ -3,328 +3,363 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BreedMaster Pro | Tasmania</title>
+    <title>K9 Management | Master Suite</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .page-view { display: none; }
-        .page-view.active { display: block; }
-        .nav-link.active { @apply bg-blue-600 text-white shadow-lg; }
+        .view { display: none; }
+        .view.active { display: block; }
+        .nav-active { @apply bg-red-700 text-white shadow-lg; }
+        input, select, textarea { @apply w-full bg-zinc-800 border border-zinc-700 rounded-lg p-2.5 text-white focus:ring-2 focus:ring-red-600 outline-none transition; }
+        label { @apply text-[10px] font-bold text-zinc-500 uppercase tracking-tighter mb-1 block; }
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
     </style>
 </head>
-<body class="bg-gray-100 h-screen flex overflow-hidden font-sans">
+<body class="bg-zinc-950 text-zinc-200 min-h-screen flex flex-col md:flex-row overflow-hidden">
 
     <!-- SIDEBAR -->
-    <aside class="w-72 bg-slate-900 text-white flex flex-col shadow-2xl">
-        <div class="p-6 border-b border-slate-800">
-            <h1 class="text-2xl font-black tracking-tighter flex items-center">
-                <i class="fa-solid fa-shield-dog text-blue-400 mr-3"></i>BREEDMASTER
-            </h1>
-            <p class="text-[10px] text-slate-500 uppercase font-bold mt-1 tracking-widest">Professional Registry System</p>
+    <nav class="w-full md:w-64 bg-zinc-900 border-r border-zinc-800 flex flex-col shrink-0">
+        <div class="p-6 border-b border-zinc-800">
+            <h1 class="text-xl font-black italic tracking-tighter text-white">K9<span class="text-red-600 font-black">MASTER</span></h1>
         </div>
+        <div class="flex-grow overflow-y-auto p-4 space-y-2" id="nav-btns">
+            <button onclick="showView('dash')" class="nav-active w-full flex items-center p-3 rounded-xl text-sm font-bold transition"><i class="fa-solid fa-gauge w-6"></i> Dashboard</button>
+            <button onclick="showView('dogs')" class="w-full flex items-center p-3 rounded-xl text-sm font-bold text-zinc-400 hover:bg-zinc-800 transition"><i class="fa-solid fa-dog w-6"></i> Dog Registry</button>
+            <button onclick="showView('repro')" class="w-full flex items-center p-3 rounded-xl text-sm font-bold text-zinc-400 hover:bg-zinc-800 transition"><i class="fa-solid fa-calendar-check w-6"></i> Mating & Repro</button>
+            <button onclick="showView('health')" class="w-full flex items-center p-3 rounded-xl text-sm font-bold text-zinc-400 hover:bg-zinc-800 transition"><i class="fa-solid fa-kit-medical w-6"></i> Health & Vax</button>
+            <button onclick="showView('waitlist')" class="w-full flex items-center p-3 rounded-xl text-sm font-bold text-zinc-400 hover:bg-zinc-800 transition"><i class="fa-solid fa-address-book w-6"></i> Waitlist</button>
+            <button onclick="showView('finance')" class="w-full flex items-center p-3 rounded-xl text-sm font-bold text-zinc-400 hover:bg-zinc-800 transition"><i class="fa-solid fa-sack-dollar w-6"></i> Finances</button>
+        </div>
+        <div class="p-4 border-t border-zinc-800 space-y-2">
+            <button onclick="exportCSV()" class="w-full bg-zinc-800 text-[10px] font-black py-2 rounded-lg uppercase hover:bg-zinc-700">Export CSV</button>
+            <button onclick="window.print()" class="w-full bg-zinc-800 text-[10px] font-black py-2 rounded-lg uppercase hover:bg-zinc-700">Print Records</button>
+        </div>
+    </nav>
+
+    <!-- MAIN AREA -->
+    <main class="flex-1 flex flex-col overflow-hidden bg-zinc-950">
         
-        <nav class="flex-grow p-4 space-y-1 overflow-y-auto" id="main-nav">
-            <button onclick="showPage('dash')" class="nav-link active w-full flex items-center p-3 rounded-xl transition">
-                <i class="fa-solid fa-chart-pie mr-3 w-5 text-center"></i> Dashboard
-            </button>
-            <button onclick="showPage('dogs')" class="nav-link w-full flex items-center p-3 rounded-xl transition text-slate-400 hover:text-white">
-                <i class="fa-solid fa-dog mr-3 w-5 text-center"></i> My Dogs
-            </button>
-            <button onclick="showPage('litters')" class="nav-link w-full flex items-center p-3 rounded-xl transition text-slate-400 hover:text-white">
-                <i class="fa-solid fa-baby-carriage mr-3 w-5 text-center"></i> Litters & Whelping
-            </button>
-            <button onclick="showPage('waitlist')" class="nav-link w-full flex items-center p-3 rounded-xl transition text-slate-400 hover:text-white">
-                <i class="fa-solid fa-id-card-clip mr-3 w-5 text-center"></i> Waitlist & Leads
-            </button>
-            <button onclick="showPage('health')" class="nav-link w-full flex items-center p-3 rounded-xl transition text-slate-400 hover:text-white">
-                <i class="fa-solid fa-file-medical mr-3 w-5 text-center"></i> Health & Growth
-            </button>
-            <button onclick="showPage('finance')" class="nav-link w-full flex items-center p-3 rounded-xl transition text-slate-400 hover:text-white">
-                <i class="fa-solid fa-calculator mr-3 w-5 text-center"></i> Finance & Inventory
-            </button>
-        </nav>
-
-        <div class="p-4 border-t border-slate-800 bg-slate-950/50">
-            <button onclick="exportAllData()" class="w-full bg-slate-800 hover:bg-slate-700 text-xs py-2 rounded font-bold transition">
-                <i class="fa-solid fa-file-export mr-2"></i> EXPORT DATABASE (CSV)
-            </button>
-        </div>
-    </aside>
-
-    <!-- MAIN CONTENT -->
-    <div class="flex-1 flex flex-col overflow-hidden">
-        <header class="bg-white border-b p-4 flex justify-between items-center shadow-sm z-10">
-            <h2 id="page-title" class="text-xl font-extrabold text-slate-800">Dashboard</h2>
-            <div class="flex items-center space-x-3">
-                <button onclick="openModal('dogModal')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition">
-                    + Add Dog
-                </button>
-                <div class="h-10 w-10 bg-slate-200 rounded-full flex items-center justify-center font-bold text-slate-600 border-2 border-white shadow-sm">
-                    DC
+        <!-- DASHBOARD -->
+        <section id="dash" class="view active p-8 overflow-y-auto space-y-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-zinc-900 p-5 rounded-2xl border border-zinc-800 shadow-xl">
+                    <label>Active Program</label>
+                    <p id="stat-dog-count" class="text-4xl font-black">0</p>
+                    <span class="text-[10px] text-zinc-500 font-bold uppercase">Dogs Registered</span>
+                </div>
+                <div class="bg-zinc-900 p-5 rounded-2xl border border-zinc-800 shadow-xl">
+                    <label>Leads</label>
+                    <p id="stat-wait-count" class="text-4xl font-black text-blue-500">0</p>
+                    <span class="text-[10px] text-zinc-500 font-bold uppercase">On Waitlist</span>
+                </div>
+                <div class="bg-zinc-900 p-5 rounded-2xl border border-zinc-800 shadow-xl md:col-span-2">
+                    <label>Current Net Profit</label>
+                    <p id="stat-profit" class="text-4xl font-black text-green-500">$0</p>
+                    <span class="text-[10px] text-zinc-500 font-bold uppercase">Lifetime Balance</span>
                 </div>
             </div>
-        </header>
-
-        <main class="flex-1 overflow-y-auto p-6 bg-slate-50/50">
-            
-            <!-- DASHBOARD -->
-            <section id="dash" class="page-view active space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
-                        <span class="text-blue-600 bg-blue-50 p-2 rounded-lg text-xs font-black mb-2 inline-block uppercase">Upcoming Whelps</span>
-                        <p class="text-3xl font-black text-slate-800">01</p>
-                        <p class="text-xs text-slate-400 mt-1">Litter B (14 Days)</p>
-                    </div>
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
-                        <span class="text-purple-600 bg-purple-50 p-2 rounded-lg text-xs font-black mb-2 inline-block uppercase">Active Waitlist</span>
-                        <p class="text-3xl font-black text-slate-800">18</p>
-                        <p class="text-xs text-slate-400 mt-1">4 High-Priority Leads</p>
-                    </div>
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
-                        <span class="text-green-600 bg-green-50 p-2 rounded-lg text-xs font-black mb-2 inline-block uppercase">Monthly Profit</span>
-                        <p class="text-3xl font-black text-slate-800">$4,200</p>
-                        <p class="text-xs text-slate-400 mt-1">+12% from last month</p>
-                    </div>
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
-                        <span class="text-red-600 bg-red-50 p-2 rounded-lg text-xs font-black mb-2 inline-block uppercase">Heat Alerts</span>
-                        <p class="text-3xl font-black text-slate-800">02</p>
-                        <p class="text-xs text-slate-400 mt-1">Luna & Bella due June</p>
-                    </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-zinc-900 p-6 rounded-3xl border border-zinc-800">
+                    <h3 class="font-black text-xs uppercase tracking-widest text-zinc-500 mb-6">Financial Balance (Income vs Expense)</h3>
+                    <canvas id="financeChart" height="200"></canvas>
                 </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <!-- FINANCE GRAPH -->
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-black text-slate-700 uppercase text-sm tracking-widest">Financial Comparison</h3>
-                            <select class="text-xs border-none bg-slate-100 rounded p-1 font-bold">
-                                <option>Last 6 Months</option>
-                            </select>
-                        </div>
-                        <canvas id="mainFinanceChart" height="150"></canvas>
-                    </div>
-                    <!-- RECENT TASKS -->
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                        <h3 class="font-black text-slate-700 uppercase text-sm tracking-widest mb-4">Urgent Actions</h3>
-                        <div class="space-y-3">
-                            <div class="flex items-center p-3 bg-red-50 rounded-xl border border-red-100">
-                                <i class="fa-solid fa-syringe text-red-500 mr-4"></i>
-                                <div class="flex-grow">
-                                    <p class="text-sm font-bold text-red-900">Vaccination Due</p>
-                                    <p class="text-xs text-red-700 opacity-70">Thor (Rottweiler) - Annual DHPP</p>
-                                </div>
-                                <button class="text-xs font-black text-red-900 underline">DONE</button>
-                            </div>
-                            <div class="flex items-center p-3 bg-blue-50 rounded-xl border border-blue-100">
-                                <i class="fa-solid fa-envelope text-blue-500 mr-4"></i>
-                                <div class="flex-grow">
-                                    <p class="text-sm font-bold text-blue-900">Waitlist Follow-up</p>
-                                    <p class="text-xs text-blue-700 opacity-70">Contact Sarah Re: Litter A Deposit</p>
-                                </div>
-                                <button class="text-xs font-black text-blue-900 underline">SEND</button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="bg-zinc-900 p-6 rounded-3xl border border-zinc-800">
+                    <h3 class="font-black text-xs uppercase tracking-widest text-zinc-500 mb-4">Quick Health Tasks</h3>
+                    <div id="health-summary" class="space-y-2 text-sm text-zinc-500 italic">No vaccinations logged recently.</div>
                 </div>
-            </section>
-
-            <!-- DOGS VIEW -->
-            <section id="dogs" class="page-view">
-                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6" id="dog-grid">
-                    <!-- Cards injected by JS -->
-                </div>
-            </section>
-
-            <!-- FINANCE VIEW -->
-            <section id="finance" class="page-view space-y-6">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border">
-                    <h3 class="font-black text-slate-700 mb-4">Transaction Ledger</h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left">
-                            <thead class="bg-slate-50 text-[10px] uppercase font-black text-slate-400">
-                                <tr>
-                                    <th class="p-4">Date</th>
-                                    <th class="p-4">Category</th>
-                                    <th class="p-4">Description</th>
-                                    <th class="p-4">Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody id="finance-body" class="text-sm">
-                                <tr class="border-b border-slate-50">
-                                    <td class="p-4 font-medium">May 04, 2026</td>
-                                    <td class="p-4"><span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-[10px] font-bold">INCOME</span></td>
-                                    <td class="p-4 text-slate-500">Litter A Deposit - Smith</td>
-                                    <td class="p-4 font-black text-green-600">+$500.00</td>
-                                </tr>
-                                <tr class="border-b border-slate-50">
-                                    <td class="p-4 font-medium">May 02, 2026</td>
-                                    <td class="p-4"><span class="bg-red-100 text-red-700 px-2 py-1 rounded-full text-[10px] font-bold">OUTCOME</span></td>
-                                    <td class="p-4 text-slate-500">Vet Checkup - Luna</td>
-                                    <td class="p-4 font-black text-red-600">-$240.00</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- OTHER VIEWS PLACEHOLDERS (Add content as needed) -->
-            <section id="litters" class="page-view"><div class="p-20 text-center text-slate-400 font-bold border-4 border-dashed rounded-3xl italic">Litter Prediction Engine & Whelping Logs loading...</div></section>
-            <section id="waitlist" class="page-view"><div class="p-20 text-center text-slate-400 font-bold border-4 border-dashed rounded-3xl italic">Waitlist Management & CRM loading...</div></section>
-            <section id="health" class="page-view"><div class="p-20 text-center text-slate-400 font-bold border-4 border-dashed rounded-3xl italic">Medical Documents & growth chart loading...</div></section>
-
-        </main>
-    </div>
-
-    <!-- MODAL: ADD DOG -->
-    <div id="dogModal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden">
-            <div class="p-6 border-b flex justify-between items-center">
-                <h3 class="font-black text-xl">Register New Dog</h3>
-                <button onclick="closeModal('dogModal')" class="text-slate-400 hover:text-slate-900"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
-            <div class="p-6 space-y-4">
-                <div>
-                    <label class="text-[10px] font-black text-slate-400 uppercase">Dog's Name</label>
-                    <input type="text" id="dog-name" class="w-full bg-slate-50 border-2 border-slate-100 rounded-xl p-3 mt-1 focus:border-blue-500 outline-none transition">
-                </div>
-                <div class="grid grid-cols-2 gap-4">
+        </section>
+
+        <!-- DOGS -->
+        <section id="dogs" class="view p-8 overflow-y-auto space-y-6">
+            <div class="flex justify-between items-center">
+                <h2 class="text-3xl font-black italic tracking-tighter">THE PACK</h2>
+                <button onclick="openModal('dogModal')" class="bg-red-600 px-6 py-2 rounded-xl font-black text-xs tracking-widest shadow-lg">+ NEW DOG</button>
+            </div>
+            <div id="dogGrid" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+        </section>
+
+        <!-- REPRO -->
+        <section id="repro" class="view p-8 overflow-y-auto space-y-8">
+            <div class="max-w-2xl bg-zinc-900 p-8 rounded-3xl border border-zinc-800 shadow-2xl">
+                <h3 class="text-xl font-black mb-6 flex items-center"><i class="fa-solid fa-heart-pulse text-red-600 mr-3"></i>Mating & Cycle Forecast</h3>
+                <div class="space-y-4">
                     <div>
-                        <label class="text-[10px] font-black text-slate-400 uppercase">Breed</label>
-                        <input type="text" id="dog-breed" class="w-full bg-slate-50 border-2 border-slate-100 rounded-xl p-3 mt-1 outline-none">
+                        <label>Date of Mating / Last Heat Start</label>
+                        <input type="date" id="mating-date-calc" class="text-lg">
                     </div>
-                    <div>
-                        <label class="text-[10px] font-black text-slate-400 uppercase">Role</label>
-                        <select id="dog-role" class="w-full bg-slate-50 border-2 border-slate-100 rounded-xl p-3 mt-1 outline-none font-bold">
-                            <option>DAM</option>
-                            <option>SIRE</option>
-                        </select>
+                    <button onclick="calculateRepro()" class="w-full bg-red-600 py-4 rounded-2xl font-black tracking-widest uppercase text-xs">Run Calculations</button>
+                </div>
+                <div id="repro-results" class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 hidden">
+                    <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800">
+                        <label class="text-red-500">Predicted Whelp (63 Days)</label>
+                        <p id="calc-whelp" class="text-xl font-black"></p>
+                    </div>
+                    <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800">
+                        <label class="text-zinc-400">Next Predicted Heat (6 Mo)</label>
+                        <p id="calc-heat" class="text-xl font-black"></p>
                     </div>
                 </div>
-                <button onclick="saveDog()" class="w-full bg-blue-600 text-white font-black py-4 rounded-2xl shadow-lg hover:bg-blue-700 transition">SAVE TO DATABASE</button>
+            </div>
+        </section>
+
+        <!-- HEALTH & DIET -->
+        <section id="health" class="view p-8 overflow-y-auto space-y-8">
+            <div class="bg-zinc-900 rounded-3xl border border-zinc-800 overflow-hidden">
+                <div class="p-6 border-b border-zinc-800 bg-zinc-800/30">
+                    <h3 class="font-black text-xs uppercase tracking-widest">Medical & Vaccine Record</h3>
+                </div>
+                <table class="w-full text-left">
+                    <thead class="bg-zinc-950 text-[10px] font-black uppercase text-zinc-500"><tr class="p-4"><th class="p-4">Dog Name</th><th class="p-4">Treatment/Vax</th><th class="p-4">Date</th><th class="p-4">Actions</th></tr></thead>
+                    <tbody id="vax-table-body" class="divide-y divide-zinc-800"></tbody>
+                </table>
+                <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-zinc-800">
+                    <input type="text" id="vax-dog" placeholder="Dog Name">
+                    <input type="text" id="vax-name" placeholder="Treatment Name">
+                    <input type="date" id="vax-date">
+                    <button onclick="saveVax()" class="bg-zinc-100 text-black font-black p-2 rounded-lg text-xs uppercase">Add Entry</button>
+                </div>
+            </div>
+
+            <div class="bg-zinc-900 p-8 rounded-3xl border border-zinc-800">
+                <h3 class="font-black text-xs uppercase tracking-widest mb-4">Diets & Feeding Routines</h3>
+                <textarea id="diet-routine" rows="5" class="bg-zinc-950" placeholder="Store your raw feeding protocols or supplement schedules here..." onkeyup="saveDiet()"></textarea>
+            </div>
+        </section>
+
+        <!-- WAITLIST -->
+        <section id="waitlist" class="view p-8 overflow-y-auto space-y-6">
+            <div class="bg-zinc-900 rounded-3xl border border-zinc-800 overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-zinc-950 text-[10px] font-black uppercase text-zinc-500"><tr><th class="p-4">Contact</th><th class="p-4">Status</th><th class="p-4">Notes</th></tr></thead>
+                    <tbody id="waitlist-table-body" class="divide-y divide-zinc-800"></tbody>
+                </table>
+                <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-4 bg-zinc-900/50">
+                    <input type="text" id="wait-name" placeholder="Contact Full Name">
+                    <input type="text" id="wait-note" placeholder="Specific breed/gender preference...">
+                    <button onclick="saveWaitlist()" class="bg-blue-600 py-3 rounded-xl font-black text-xs tracking-widest uppercase col-span-1 md:col-span-2">Add to Waitlist</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- FINANCE -->
+        <section id="finance" class="view p-8 overflow-y-auto space-y-6">
+            <div class="bg-zinc-900 rounded-3xl border border-zinc-800 overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-zinc-950 text-[10px] font-black uppercase text-zinc-500"><tr><th class="p-4">Date</th><th class="p-4">Description</th><th class="p-4">Type</th><th class="p-4">Amount</th></tr></thead>
+                    <tbody id="finance-table-body" class="divide-y divide-zinc-800"></tbody>
+                </table>
+                <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-4 bg-zinc-950">
+                    <input type="text" id="fin-desc" placeholder="Transaction Details">
+                    <input type="number" id="fin-amt" placeholder="Amount ($)">
+                    <select id="fin-type"><option value="INCOME">Income</option><option value="EXPENSE">Expense</option></select>
+                    <button onclick="saveFin()" class="bg-green-600 py-3 rounded-xl font-black text-xs uppercase col-span-3">Post Entry</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL: DOG REGISTRATION -->
+    <div id="dogModal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-zinc-900 w-full max-w-2xl rounded-3xl p-8 border border-zinc-800 shadow-2xl">
+            <h2 class="text-2xl font-black mb-8 italic">DOG REGISTRATION</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div><label>Name</label><input type="text" id="in-name" placeholder="Luna"></div>
+                <div><label>Breed</label><input type="text" id="in-breed" placeholder="Rottweiler / GSD"></div>
+                <div><label>Profile Image</label><input type="file" id="in-img" accept="image/*"></div>
+                <div><label>Role</label><select id="in-role"><option>DAM</option><option>SIRE</option><option>PUPPY</option></select></div>
+                <div class="md:col-span-2"><label>Medical, DNA & Certificates</label><textarea id="in-notes" rows="4" placeholder="HD/ED scores, DNA Clearances, Rego numbers..."></textarea></div>
+            </div>
+            <div class="flex gap-4 mt-8">
+                <button onclick="saveDog()" class="flex-1 bg-red-600 py-4 rounded-2xl font-black uppercase tracking-widest text-xs">Commit Registry</button>
+                <button onclick="closeModal('dogModal')" class="flex-1 bg-zinc-800 text-zinc-500 font-black py-4 rounded-2xl uppercase text-xs">Cancel</button>
             </div>
         </div>
     </div>
 
     <script>
-        // --- DATA STORE (Saves to Local Storage) ---
-        let appData = JSON.parse(localStorage.getItem('breedTrackerData')) || {
-            dogs: [
-                { name: 'Luna', breed: 'German Shepherd', role: 'DAM', status: 'Active' },
-                { name: 'Thor', breed: 'Rottweiler', role: 'SIRE', status: 'Active' }
-            ],
-            finance: []
+        // --- DATABASE INIT (IndexedDB) ---
+        let db;
+        const req = indexedDB.open("K9MasterProDB", 2);
+        req.onupgradeneeded = e => {
+            const d = e.target.result;
+            if(!d.objectStoreNames.contains("dogs")) d.createObjectStore("dogs", { keyPath: "id", autoIncrement: true });
+            if(!d.objectStoreNames.contains("finance")) d.createObjectStore("finance", { keyPath: "id", autoIncrement: true });
+            if(!d.objectStoreNames.contains("waitlist")) d.createObjectStore("waitlist", { keyPath: "id", autoIncrement: true });
+            if(!d.objectStoreNames.contains("health")) d.createObjectStore("health", { keyPath: "id", autoIncrement: true });
+            if(!d.objectStoreNames.contains("meta")) d.createObjectStore("meta", { keyPath: "key" });
         };
-
-        function persist() {
-            localStorage.setItem('breedTrackerData', JSON.stringify(appData));
-            renderDogs();
-        }
+        req.onsuccess = e => { db = e.target.result; refreshAll(); };
 
         // --- NAVIGATION ---
-        function showPage(pageId) {
-            document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            
-            document.getElementById('page-title').innerText = event.currentTarget.innerText;
-            if(pageId === 'dash') renderCharts();
+        function showView(id) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('#nav-btns button').forEach(b => b.classList.remove('nav-active'));
+            event.currentTarget.classList.add('nav-active');
+            if(id === 'dash') initFinanceChart();
         }
 
-        // --- DOG MANAGEMENT ---
-        function renderDogs() {
-            const grid = document.getElementById('dog-grid');
-            grid.innerHTML = appData.dogs.map((dog, idx) => `
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 hover:shadow-xl transition-all group relative">
-                    <button onclick="deleteDog(${idx})" class="absolute top-4 right-4 text-slate-200 hover:text-red-500 transition"><i class="fa-solid fa-trash-can"></i></button>
-                    <div class="h-20 w-20 bg-blue-50 text-3xl flex items-center justify-center rounded-2xl mb-4 group-hover:scale-110 transition-transform">🐕</div>
-                    <h3 class="font-black text-slate-800 text-lg uppercase">${dog.name}</h3>
-                    <p class="text-xs font-bold text-slate-400 mb-4">${dog.breed}</p>
-                    <div class="flex justify-between items-center pt-4 border-t border-slate-50">
-                        <span class="text-[10px] font-black px-2 py-1 rounded bg-slate-100 text-slate-600">${dog.role}</span>
-                        <span class="text-[10px] font-black text-green-600">● ONLINE</span>
+        // --- CORE SAVING LOGIC ---
+        async function saveDog() {
+            const file = document.getElementById('in-img').files[0];
+            let photo = null;
+            if(file) photo = await new Promise(r => { const rd = new FileReader(); rd.onload = () => r(rd.result); rd.readAsDataURL(file); });
+
+            const tx = db.transaction("dogs", "readwrite");
+            tx.objectStore("dogs").add({
+                name: document.getElementById('in-name').value,
+                breed: document.getElementById('in-breed').value,
+                role: document.getElementById('in-role').value,
+                notes: document.getElementById('in-notes').value,
+                photo: photo,
+                date: new Date().toLocaleDateString()
+            });
+            tx.oncomplete = () => { closeModal('dogModal'); refreshAll(); };
+        }
+
+        function saveFin() {
+            const tx = db.transaction("finance", "readwrite");
+            tx.objectStore("finance").add({
+                desc: document.getElementById('fin-desc').value,
+                amt: parseFloat(document.getElementById('fin-amt').value),
+                type: document.getElementById('fin-type').value,
+                date: new Date().toLocaleDateString()
+            });
+            tx.oncomplete = () => { refreshAll(); };
+        }
+
+        function saveWaitlist() {
+            const tx = db.transaction("waitlist", "readwrite");
+            tx.objectStore("waitlist").add({
+                name: document.getElementById('wait-name').value,
+                note: document.getElementById('wait-note').value,
+                status: 'PENDING'
+            });
+            tx.oncomplete = () => { refreshAll(); };
+        }
+
+        function saveVax() {
+            const tx = db.transaction("health", "readwrite");
+            tx.objectStore("health").add({
+                dog: document.getElementById('vax-dog').value,
+                name: document.getElementById('vax-name').value,
+                date: document.getElementById('vax-date').value
+            });
+            tx.oncomplete = () => { refreshAll(); };
+        }
+
+        function saveDiet() {
+            const tx = db.transaction("meta", "readwrite");
+            tx.objectStore("meta").put({ key: "diets", val: document.getElementById('diet-routine').value });
+        }
+
+        // --- UI REFRESH ENGINE ---
+        function refreshAll() {
+            const tx = db.transaction(["dogs", "finance", "waitlist", "health", "meta"]);
+            
+            tx.objectStore("dogs").getAll().onsuccess = e => {
+                const dogs = e.target.result;
+                document.getElementById('stat-dog-count').innerText = dogs.length;
+                document.getElementById('dogGrid').innerHTML = dogs.map(d => `
+                    <div class="bg-zinc-900 rounded-3xl border border-zinc-800 p-5 space-y-4 shadow-xl">
+                        <div class="h-48 bg-zinc-800 rounded-2xl overflow-hidden">
+                            ${d.photo ? `<img src="${d.photo}" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center"><i class="fa-solid fa-dog text-5xl text-zinc-700"></i></div>`}
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-black italic uppercase">${d.name}</h4>
+                            <p class="text-[10px] font-bold text-red-600 uppercase tracking-widest">${d.breed} | ${d.role}</p>
+                        </div>
+                        <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
+                            <label>DOCS & NOTES</label>
+                            <p class="text-xs text-zinc-400 line-clamp-3">${d.notes || 'No certificates logged.'}</p>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `).join('');
+            };
+
+            tx.objectStore("finance").getAll().onsuccess = e => {
+                const fins = e.target.result;
+                let profit = 0;
+                document.getElementById('finance-table-body').innerHTML = fins.map(f => {
+                    profit += (f.type === 'INCOME' ? f.amt : -f.amt);
+                    return `<tr class="text-xs font-bold border-zinc-800"><td class="p-4">${f.date}</td><td class="p-4 text-zinc-300 uppercase">${f.desc}</td><td class="p-4 text-[9px] uppercase tracking-widest text-zinc-500">${f.type}</td><td class="p-4 font-black ${f.type === 'INCOME' ? 'text-green-500' : 'text-red-500'}">${f.type === 'INCOME' ? '+' : '-'}$${f.amt}</td></tr>`;
+                }).join('');
+                document.getElementById('stat-profit').innerText = `$${profit.toLocaleString()}`;
+                initFinanceChart(fins);
+            };
+
+            tx.objectStore("waitlist").getAll().onsuccess = e => {
+                const list = e.target.result;
+                document.getElementById('stat-wait-count').innerText = list.length;
+                document.getElementById('waitlist-table-body').innerHTML = list.map(w => `<tr class="text-xs border-zinc-800"><td class="p-4 font-black">${w.name}</td><td class="p-4 text-[10px] uppercase font-bold text-blue-500">${w.status}</td><td class="p-4 text-zinc-500 italic">${w.note}</td></tr>`).join('');
+            };
+
+            tx.objectStore("health").getAll().onsuccess = e => {
+                const health = e.target.result;
+                document.getElementById('vax-table-body').innerHTML = health.map(h => `<tr class="text-xs"><td class="p-4 font-black uppercase tracking-tight">${h.dog}</td><td class="p-4 text-zinc-400">${h.name}</td><td class="p-4 text-zinc-500">${h.date}</td><td class="p-4"><i class="fa-solid fa-check text-green-500"></i></td></tr>`).join('');
+            };
+
+            tx.objectStore("meta").get("diets").onsuccess = e => {
+                if(e.target.result) document.getElementById('diet-routine').value = e.target.result.val;
+            };
         }
 
-        function saveDog() {
-            const name = document.getElementById('dog-name').value;
-            const breed = document.getElementById('dog-breed').value;
-            const role = document.getElementById('dog-role').value;
-            if(!name) return alert("Enter a name!");
+        // --- CALCULATIONS ---
+        function calculateRepro() {
+            const input = document.getElementById('mating-date-calc').value;
+            if(!input) return;
+            const date = new Date(input);
             
-            appData.dogs.push({ name, breed, role, status: 'Active' });
-            persist();
-            closeModal('dogModal');
-            document.getElementById('dog-name').value = '';
+            const whelp = new Date(date); whelp.setDate(date.getDate() + 63);
+            const heat = new Date(date); heat.setMonth(date.getMonth() + 6);
+            
+            document.getElementById('calc-whelp').innerText = whelp.toDateString();
+            document.getElementById('calc-heat').innerText = heat.toDateString();
+            document.getElementById('repro-results').classList.remove('hidden');
         }
 
-        function deleteDog(idx) {
-            if(confirm("Permanently delete this record?")) {
-                appData.dogs.splice(idx, 1);
-                persist();
-            }
-        }
+        // --- VISUALS ---
+        let financeChart;
+        function initFinanceChart(fins = []) {
+            const ctx = document.getElementById('financeChart').getContext('2d');
+            const inc = fins.filter(f => f.type === 'INCOME').reduce((a,b) => a + b.amt, 0);
+            const exp = fins.filter(f => f.type === 'EXPENSE').reduce((a,b) => a + b.amt, 0);
 
-        // --- MODALS ---
-        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-
-        // --- CHARTS ---
-        function renderCharts() {
-            const ctx = document.getElementById('mainFinanceChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
+            if(financeChart) financeChart.destroy();
+            financeChart = new Chart(ctx, {
+                type: 'doughnut',
                 data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+                    labels: ['INCOME', 'EXPENSE'],
                     datasets: [{
-                        label: 'Gross Income',
-                        data: [1200, 1900, 3000, 5000, 4200],
-                        borderColor: '#2563eb',
-                        borderWidth: 4,
-                        pointRadius: 0,
-                        tension: 0.4,
-                        fill: true,
-                        backgroundColor: 'rgba(37, 99, 235, 0.05)'
-                    }, {
-                        label: 'Expenses',
-                        data: [800, 1100, 1500, 2100, 1200],
-                        borderColor: '#f43f5e',
-                        borderWidth: 2,
-                        borderDash: [5, 5],
-                        pointRadius: 0,
-                        tension: 0.4
+                        data: [inc || 1, exp || 1],
+                        backgroundColor: ['#22c55e', '#dc2626'],
+                        borderWidth: 0,
+                        hoverOffset: 10
                     }]
                 },
-                options: {
-                    plugins: { legend: { display: false } },
-                    scales: { y: { display: false }, x: { grid: { display: false } } }
-                }
+                options: { cutout: '80%', plugins: { legend: { position: 'bottom', labels: { color: '#71717a', font: { weight: 'bold' } } } } }
             });
         }
 
-        // --- EXPORT ---
-        function exportAllData() {
-            const csvContent = "data:text/csv;charset=utf-8," + 
-                "Name,Breed,Role\n" + 
-                appData.dogs.map(d => `${d.name},${d.breed},${d.role}`).join("\n");
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "breeding_registry_export.csv");
-            document.body.appendChild(link);
-            link.click();
-        }
+        // --- UTILS ---
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-        // Initialize
-        renderDogs();
-        renderCharts();
+        function exportCSV() {
+            const tx = db.transaction(["dogs", "finance", "waitlist", "health"]);
+            let content = "TYPE,NAME/DESC,DETAIL,DATE/VALUE\n";
+            tx.objectStore("dogs").getAll().onsuccess = e => e.target.result.forEach(x => content += `DOG,${x.name},${x.role},${x.date}\n`);
+            tx.objectStore("finance").getAll().onsuccess = e => e.target.result.forEach(x => content += `FINANCE,${x.desc},${x.amt},${x.date}\n`);
+            setTimeout(() => {
+                const blob = new Blob([content], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a'); a.href = url; a.download = 'breeding_records_master.csv'; a.click();
+            }, 500);
+        }
     </script>
 </body>
 </html>
