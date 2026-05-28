@@ -1,59 +1,236 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App";
+import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
+import {
+  Home,
+  Dog,
+  Activity,
+  DollarSign,
+  LineChart
+} from "lucide-react";
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
-import Dashboard from "./pages/Dashboard";
-import Dogs from "./pages/Dogs";
+/* ---------------------------
+   SIDEBAR
+----------------------------*/
+function Sidebar() {
+  const location = useLocation();
 
-function App() {
+  const Item = ({ to, icon, label }) => {
+    const active = location.pathname === to;
+
+    return (
+      <Link to={to} style={{ textDecoration: "none" }}>
+        <div
+          style={{
+            display: "flex",
+            gap: 10,
+            padding: "10px 12px",
+            borderRadius: 10,
+            marginBottom: 8,
+            background: active ? "#1f2937" : "transparent",
+            color: active ? "white" : "#cbd5e1",
+            alignItems: "center",
+            cursor: "pointer"
+          }}
+        >
+          {icon}
+          <span>{label}</span>
+        </div>
+      </Link>
+    );
+  };
+
   return (
-    <div>
-      <h1>🐶 Rottweiler Kennel System</h1>
-      <Dashboard />
-      <Dogs />
+    <div
+      style={{
+        width: 240,
+        background: "#0b1220",
+        padding: 20,
+        color: "white",
+        minHeight: "100vh"
+      }}
+    >
+      <h2 style={{ marginBottom: 20 }}>🐶 Kennel OS</h2>
+
+      <Item to="/" icon={<Home size={18} />} label="Dashboard" />
+      <Item to="/dogs" icon={<Dog size={18} />} label="Dogs" />
+      <Item to="/litters" icon={<Activity size={18} />} label="Litters" />
+      <Item to="/finance" icon={<DollarSign size={18} />} label="Finance" />
+      <Item to="/growth" icon={<LineChart size={18} />} label="Growth" />
     </div>
   );
 }
 
-export default App;
-        function Dashboard() {
-  const totalProfit = 12500;
-  const activeLitters = 2;
-  const puppiesAvailable = 6;
-
+/* ---------------------------
+   LAYOUT
+----------------------------*/
+function Layout({ children }) {
   return (
-    <div>
-      <h2>Dashboard</h2>
-      <p>Total Profit: ${totalProfit}</p>
-      <p>Active Litters: {activeLitters}</p>
-      <p>Puppies Available: {puppiesAvailable}</p>
+    <div style={{ display: "flex", minHeight: "100vh", background: "#0f172a" }}>
+      <Sidebar />
+      <div style={{ flex: 1, padding: 25, color: "white" }}>{children}</div>
     </div>
   );
 }
 
-export default Dashboard;
-        const dogs = [
-  { name: "Rex", sex: "Male", status: "Breeding" },
-  { name: "Luna", sex: "Female", status: "Active" }
-];
+/* ---------------------------
+   UI COMPONENTS
+----------------------------*/
+function StatCard({ title, value }) {
+  return (
+    <div
+      style={{
+        background: "#1f2937",
+        padding: 20,
+        borderRadius: 14,
+        minWidth: 180,
+        flex: 1
+      }}
+    >
+      <p style={{ color: "#94a3b8", margin: 0 }}>{title}</p>
+      <h2 style={{ marginTop: 10 }}>{value}</h2>
+    </div>
+  );
+}
+
+/* ---------------------------
+   PAGES
+----------------------------*/
+function Dashboard() {
+  return (
+    <div>
+      <h1>Dashboard</h1>
+
+      <div style={{ display: "flex", gap: 15, marginTop: 20, flexWrap: "wrap" }}>
+        <StatCard title="Total Profit" value="$12,450" />
+        <StatCard title="Active Litters" value="2" />
+        <StatCard title="Puppies Available" value="6" />
+        <StatCard title="Kennel Score" value="82 / 100" />
+      </div>
+
+      <div
+        style={{
+          marginTop: 30,
+          background: "#1f2937",
+          padding: 20,
+          borderRadius: 14
+        }}
+      >
+        <h3>📊 Overview</h3>
+        <p style={{ color: "#94a3b8" }}>
+          Your kennel is currently stable. Focus recommended on improving litter
+          quality and increasing average puppy price.
+        </p>
+      </div>
+    </div>
+  );
+}
 
 function Dogs() {
+  const dogs = [
+    { name: "Rex", sex: "Male", status: "Breeding" },
+    { name: "Luna", sex: "Female", status: "Active" },
+    { name: "Koda", sex: "Male", status: "Retired" }
+  ];
+
   return (
     <div>
-      <h2>Dogs</h2>
-      {dogs.map((dog, i) => (
-        <div key={i}>
-          <p>{dog.name} - {dog.sex} - {dog.status}</p>
-        </div>
-      ))}
+      <h1>Dogs</h1>
+
+      <div style={{ marginTop: 20 }}>
+        {dogs.map((d, i) => (
+          <div
+            key={i}
+            style={{
+              background: "#1f2937",
+              padding: 15,
+              borderRadius: 12,
+              marginBottom: 10,
+              display: "flex",
+              justifyContent: "space-between"
+            }}
+          >
+            <span>{d.name}</span>
+            <span>{d.sex}</span>
+            <span style={{ color: "#94a3b8" }}>{d.status}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
 
-export default Dogs;
-        
+function Litters() {
+  return (
+    <div>
+      <h1>Litters</h1>
+      <div style={{ marginTop: 20, color: "#94a3b8" }}>
+        No database connected yet — this will show litter tracking once we add backend.
+      </div>
+    </div>
+  );
+}
+
+function Finance() {
+  return (
+    <div>
+      <h1>Finance</h1>
+
+      <div
+        style={{
+          marginTop: 20,
+          background: "#1f2937",
+          padding: 20,
+          borderRadius: 14
+        }}
+      >
+        <h3>💰 Profit Summary</h3>
+        <p style={{ color: "#94a3b8" }}>
+          Revenue: $18,000 <br />
+          Expenses: $5,550 <br />
+          Net Profit: $12,450
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function Growth() {
+  return (
+    <div>
+      <h1>Growth Engine</h1>
+
+      <div
+        style={{
+          marginTop: 20,
+          background: "#1f2937",
+          padding: 20,
+          borderRadius: 14
+        }}
+      >
+        <h3>📈 Scaling Insight</h3>
+        <p style={{ color: "#94a3b8" }}>
+          Recommended: Do not expand kennel size yet. Improve litter profitability
+          first before adding new breeding females.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* ---------------------------
+   APP
+----------------------------*/
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/dogs" element={<Dogs />} />
+          <Route path="/litters" element={<Litters />} />
+          <Route path="/finance" element={<Finance />} />
+          <Route path="/growth" element={<Growth />} />
+        </Routes>
+      </Layout>
+    </BrowserRouter>
+  );
+}
