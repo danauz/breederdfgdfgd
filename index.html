@@ -1,31 +1,59 @@
-kennel-system/
-│
-├── src/
-│   ├── pages/
-│   │   ├── Dashboard.jsx
-│   │   ├── Dogs.jsx
-│   │   ├── Litters.jsx
-│   │   ├── Puppies.jsx
-│   │   ├── Finance.jsx
-│   │   ├── Breeding.jsx
-│   │   └── Growth.jsx
-│   │
-│   ├── components/
-│   │   ├── Navbar.jsx
-│   │   ├── Card.jsx
-│   │   ├── Table.jsx
-│   │   └── Layout.jsx
-│   │
-│   ├── data/
-│   │   └── mockData.js
-│   │
-│   ├── utils/
-│   │   ├── calculations.js
-│   │   ├── pricing.js
-│   │   └── breedingScore.js
-│   │
-│   ├── App.jsx
-│   └── main.jsx
-│
-├── package.json
-└── README.md
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+import Dashboard from "./pages/Dashboard";
+import Dogs from "./pages/Dogs";
+
+function App() {
+  return (
+    <div>
+      <h1>🐶 Rottweiler Kennel System</h1>
+      <Dashboard />
+      <Dogs />
+    </div>
+  );
+}
+
+export default App;
+        function Dashboard() {
+  const totalProfit = 12500;
+  const activeLitters = 2;
+  const puppiesAvailable = 6;
+
+  return (
+    <div>
+      <h2>Dashboard</h2>
+      <p>Total Profit: ${totalProfit}</p>
+      <p>Active Litters: {activeLitters}</p>
+      <p>Puppies Available: {puppiesAvailable}</p>
+    </div>
+  );
+}
+
+export default Dashboard;
+        const dogs = [
+  { name: "Rex", sex: "Male", status: "Breeding" },
+  { name: "Luna", sex: "Female", status: "Active" }
+];
+
+function Dogs() {
+  return (
+    <div>
+      <h2>Dogs</h2>
+      {dogs.map((dog, i) => (
+        <div key={i}>
+          <p>{dog.name} - {dog.sex} - {dog.status}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default Dogs;
+        
